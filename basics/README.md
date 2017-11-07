@@ -1,2 +1,3 @@
-** Julia Language Basics
-** GadFly Package: Plot Basics
+## Julia Language Basics
+
+## GadFly Package: Plot Basics
