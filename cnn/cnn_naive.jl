@@ -1,7 +1,6 @@
 pwd()
 
 ENV["MOCHA_USE_NATIVE_EXT"] = "true"
-ENV["OMP_NUM_THREADS"] = 4
 using Mocha
 
 data_layer  = HDF5DataLayer(name="train-data", 
@@ -26,7 +25,7 @@ pool2_layer = PoolingLayer(name="pool2",
                            bottoms=[:conv2], tops=[:pool2])
 fc1_layer  = InnerProductLayer(name="ip1", 
                                output_dim=50,
-                               neuron=Neurons.Tanh(), 
+                               neuron=Neurons.Sigmoid(), 
                                bottoms=[:pool2], tops=[:ip1])
 fc2_layer  = InnerProductLayer(name="ip2", 
                                output_dim=1,
@@ -46,7 +45,7 @@ net = Net("merck-train",
 exp_dir = "snapshots"
 method = SGD()
 params = make_solver_parameters(method, 
-                                max_iter=1000, 
+                                max_iter=2000, 
                                 regu_coef=0.0005,
                                 mom_policy=MomPolicy.Fixed(0.9),
                                 lr_policy=LRPolicy.Inv(0.01, 0.0001, 0.75),
@@ -55,7 +54,7 @@ solver = Solver(method, params)
 # every 1000 iterations, save the statistics to disk
 setup_coffee_lounge(solver, 
                     save_into="$exp_dir/statistics.jld", 
-                    every_n_iter=1000)
+                    every_n_iter=500)
 # every 100 iterations, show the training summary
 add_coffee_break(solver, 
                  TrainingSummary(), 
@@ -63,7 +62,7 @@ add_coffee_break(solver,
 # every 500 iterations, save the snapshot
 add_coffee_break(solver, 
                  Snapshot(exp_dir), 
-                 every_n_iter=5000)
+                 every_n_iter=500)
 # Performace test network 
 # test data
 data_layer_test = HDF5DataLayer(name="test-data", 

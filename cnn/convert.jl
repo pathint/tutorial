@@ -10,7 +10,8 @@ data = readcsv("ACT$(fi)_competition_$(cat).csv")
 # 9493-2 = 9491 molecular descriptors
 head = data[1,:]
 mol  = convert(Array{String},data[2:end,1])
-act  = convert(Array{Float32}, data[2:end,2])
+# normalize to [0, 1]
+act  = convert(Array{Float32}, data[2:end,2]) ./ 11.0
 des  = convert(Array{Float32, 2}, data[2:end,3:end])
 maximum(des)
 minimum(des)
